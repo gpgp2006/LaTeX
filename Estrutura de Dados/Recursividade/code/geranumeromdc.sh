@@ -1,0 +1,1 @@
+./"gera_numeros_mdc" > teste.csv

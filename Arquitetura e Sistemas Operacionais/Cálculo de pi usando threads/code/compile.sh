@@ -1,0 +1,1 @@
+g++ -o calcpi calcpi.cpp -lpthread

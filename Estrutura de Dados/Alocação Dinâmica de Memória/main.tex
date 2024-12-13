@@ -1,0 +1,141 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{comment}
+
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+}
+\pgfplotsset{compat=1.17}
+\usepackage[portuguese]{babel}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
+
+\title{Relatório "prática de alocação de memória"}
+\author{Gabriel de Paula Gaspar Pinto}
+\date{07 outubro 2024}
+
+\begin{document}
+\maketitle
+
+\section{Introdução}
+\paragraph{}Este relatório contém os resultados de um programa em C++, que foi desenvolvido com o intuito de aprendizagem em relação à alocação dinâmica de memória, da matéria de Estrutura de Dados, utilizando grandes quantidades de dados. Assim, é possível entender como a alocação de memória com grandes quantidades afetam o sistema.
+
+\section{Ambiente de desenvolvimento}
+\paragraph{} Este programa foi desenvolvido e testado em um computador "\href{https://www.samsung.com/br/computers/samsung-book/galaxy-book4-pro-14-inch-ultra-7-16gb-512gb-np940xgk-kg1br/#specs}{Samsung Galaxy Book 4 Pro}", utilizando o Windows Subsystem for Linux (WSL), na edição Linux 5.15.153.1-microsoft-standard-WSL2, com as seguintes especificações:
+\begin{itemize}
+    \item Sistema Operacional: \href{https://www.microsoft.com/pt-br/windows}{Windows 11}
+    \item Processador: \href{https://www.intel.com.br/content/www/br/pt/products/sku/236847/intel-core-ultra-7-processor-155h-24m-cache-up-to-4-80-ghz/specifications.html}{ Intel Core Ultra 7 155H}
+    \item Memória: 16GB 7467MT/s
+    \item IDE: Visual Studio Code 1.94.0
+\end{itemize}
+
+\section{Código C++}
+\lstinputlisting[language=c++]{code/main.cpp}
+
+\section{Desafios}
+\paragraph{} Durante o desenvolvimento do programa, foi encontrado alguns desafios, principalmente envolvendo as funções de alocação dinâmica de memória, new e delete. O maior problema com tais funções foi encontrar a linha adequada para o programa funcionar, além do fato de se valia a pena ou não utilizar vetores para o funcionamento do código. \par
+Posteriormente, foi encontrado desafios para o funcionamento da biblioteca random, principalmente na geração aleatória de strings, com tamanhos aleatórios entre 100 e 500 e caracteres também aleatórios.
+
+\section{Resultados}
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Gráfico de memória utilizada por tempo decorrido},
+    xlabel={Memória Utilizada},
+    ylabel={Tempo decorrido (segundos)},
+    xmin=10000, xmax=500000,
+    ymin=0, ymax=7,
+    xtick={100000, 200000, 300000, 400000},
+    ytick={1, 2, 3, 4, 5, 6},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+    width=18.5cm,
+    height=10cm
+]
+
+\addplot[color=red, mark=none, line width=1.5pt]
+    coordinates {
+    (10544, 0.098018) (13184, 0.132835) (15560, 0.163398) (17936, 0.196658) (20312, 0.227503) (22688, 0.259186) (25064, 0.292588) (27440, 0.325612) (29816, 0.353742) (32192, 0.384355) (34832, 0.413935) (37208, 0.443763) (39584, 0.474152) (41960, 0.503197) (44336, 0.534427) (46712, 0.564906) (49088, 0.591922) (51464, 0.623283) (53840, 0.653006) (56480, 0.684314) (58856, 0.714789) (61232, 0.74486) (63608, 0.774048) (65984, 0.803823) (68360, 0.840192) (71000, 0.872227) (73376, 0.905479) (75752, 0.940364) (78128, 0.970896) (80504, 1.00724) (82880, 1.04038) (85256, 1.07149) (87896, 1.10829) (90272, 1.14091) (92648, 1.17378) (95024, 1.20475) (97400, 1.241) (99776, 1.27251) (102152, 1.30375) (104528, 1.33214) (107168, 1.36208) (109544, 1.39341) (111920, 1.42327) (114296, 1.455) (116672, 1.48556) (119048, 1.51794) (121424, 1.54967) (124064, 1.58221) (126440, 1.61529) (128816, 1.6467) (131192, 1.67928) (133568, 1.71044) (135944, 1.7412) (138320, 1.77007) (140696, 1.80192) (143336, 1.84131) (145712, 1.8752) (148088, 1.90703) (150464, 1.93862) (152840, 1.97378) (155216, 2.00248) (157856, 2.03206) (160232, 2.06069) (162608, 2.09058) (164984, 2.12031) (167360, 2.14926) (169736, 2.17915) (172112, 2.20972) (174752, 2.24287) (177128, 2.27231) (179504, 2.30266) (181880, 2.33144) (184256, 2.36284) (186632, 2.39463) (189008, 2.42407) (191384, 2.45519) (194024, 2.48465) (196400, 2.51653) (198776, 2.54542) (201152, 2.57684) (203528, 2.60697) (205904, 2.64058) (208280, 2.67236) (210656, 2.70293) (213296, 2.73179) (215672, 2.76306) (218048, 2.79363) (220424, 2.82171) (222800, 2.85504) (225176, 2.88537) (227552, 2.91478) (230192, 2.94536) (232568, 2.97516) (234944, 3.00616) (237320, 3.03836) (239696, 3.06975) (242072, 3.1019) (244712, 3.13654) (247088, 3.17187) (249464, 3.20207) (251840, 3.2344) (254216, 3.26573) (256592, 3.2958) (258968, 3.3293) (261344, 3.35944) (263984, 3.38997) (266360, 3.42308) (268736, 3.45523) (271112, 3.48789) (273488, 3.5203) (275864, 3.5503) (278240, 3.58319) (280616, 3.61379) (283256, 3.64464) (285632, 3.67262) (288008, 3.70381) (290384, 3.73607) (292760, 3.76697) (295136, 3.79994) (297512, 3.83422) (300152, 3.86545) (302528, 3.89602) (304904, 3.92966) (307280, 3.96405) (309656, 3.99739) (312032, 4.0295) (314672, 4.05926) (317048, 4.0919) (319424, 4.12369) (321800, 4.15629) (324176, 4.18919) (326552, 4.2215) (328928, 4.25498) (331304, 4.28811) (333944, 4.32062) (336320, 4.35271) (338696, 4.38468) (341072, 4.41689) (343448, 4.45033) (345824, 4.48419) (348200, 4.51748) (350840, 4.54943) (353216, 4.58467) (355592, 4.6187) (357968, 4.65143) (360344, 4.68503) (362720, 4.71809) (365096, 4.74868) (367472, 4.78054) (370112, 4.81657) (372488, 4.84823) (374864, 4.87907) (377240, 4.90789) (379616, 4.94027) (381992, 4.97247) (384368, 5.00686) (387008, 5.03537) (389384, 5.06766) (391760, 5.10242) (394136, 5.13117) (396512, 5.16124) (398888, 5.19274) (401264, 5.22672) (403904, 5.25577) (406280, 5.2858) (408656, 5.31627) (411032, 5.34701) (413408, 5.3789) (415784, 5.40831) (418160, 5.44001) (420800, 5.46953) (423176, 5.49953) (425552, 5.52836) (427928, 5.56136) (430304, 5.59217) (432680, 5.62214) (435320, 5.6572) (437696, 5.68879) (440072, 5.71888) (442448, 5.7498) (444824, 5.78327) (447200, 5.81443) (449576, 5.84713) (452216, 5.88403) (454592, 5.91907) (456968, 5.94954) (459344, 5.98269) (461720, 6.02015) (464096, 6.05515) (466472, 6.0886) (469112, 6.12192) (471488, 6.15139) (473864, 6.1843) (476240, 6.21742) (478616, 6.25232) (480992, 6.2852) (483368, 6.31467) (486008, 6.34482) (488384, 6.37454)
+    };
+    \legend{Memória x Tempo}
+    
+\end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Comparação entre Sys Time e User Time},
+    xlabel={Número de Teste},
+    ylabel={Tempo (segundos)},
+    xmin=0, xmax=200,
+    ymin=0, ymax=9.2,
+    xtick={0, 50, 100, 150, 200},
+    ytick={0, 2, 4, 6, 8, 9},
+    scaled ticks=false,
+    legend style={at={(1.05,1)}, anchor=north west},
+    ymajorgrids=true,
+    grid style=dashed,
+    width=16cm,
+    height=10cm
+]
+
+\addplot[color=red,mark=square*]
+    coordinates {
+    (0, 0.3253)(1, 0.3347)(2, 0.1709)(3, 0.6823)(4, 0.6549)(5, 0.5384)(6, 0.3574)(7, 0.2539)(8, 0.7296)(9, 0.3502)(10, 0.1820)(11, 0.6841)(12, 0.6128)(13, 0.2286)(14, 0.1847)(15, 0.6823)(16, 0.2927)(17, 0.4104)(18, 0.6887)(19, 0.6784)(20, 0.3492)(21, 0.6954)(22, 0.4444)(23, 0.4069)(24, 0.3330)(25, 0.7696)(26, 0.7555)(27, 0.7260)(28, 0.4431)(29, 0.1848)(30, 0.3269)(31, 0.3317)(32, 0.6765)(33, 0.3525)(34, 0.6213)(35, 0.1738)(36, 0.5921)(37, 0.7447)(38, 0.1961)(39, 0.5819)(40, 0.6444)(41, 0.5977)(42, 0.5234)(43, 0.2658)(44, 0.5257)(45, 0.7862)(46, 0.4849)(47, 0.4945)(48, 0.3314)(49, 0.5120)(50, 0.1566)(51, 0.7301)(52, 0.2309)(53, 0.3111)(54, 0.5395)(55, 0.5877)(56, 0.5027)(57, 0.5530)(58, 0.7371)(59, 0.6493)(60, 0.3995)(61, 0.3971)(62, 0.5242)(63, 0.6594)(64, 0.5002)(65, 0.5662)(66, 0.2981)(67, 0.6517)(68, 0.6629)(69, 0.4837)(70, 0.6265)(71, 0.4427)(72, 0.6868)(73, 0.4226)(74, 0.2249)(75, 0.7034)(76, 0.7311)(77, 0.4993)(78, 0.6618)(79, 0.3686)(80, 0.7099)(81, 0.6258)(82, 0.4494)(83, 0.4493)(84, 0.5608)(85, 0.3477)(86, 0.3368)(87, 0.3246)(88, 0.1915)(89, 0.3979)(90, 0.5704)(91, 0.2842)(92, 0.5478)(93, 0.4233)(94, 0.4870)(95, 0.2799)(96, 0.3466)(97, 0.4381)(98, 0.3796)(99, 0.1760)(100, 0.4916)(101, 0.2432)(102, 0.5450)(103, 0.3199)(104, 0.1692)(105, 0.7434)(106, 0.1921)(107, 0.2040)(108, 0.3247)(109, 0.2446)(110, 0.1965)(111, 0.4868)(112, 0.4147)(113, 0.6622)(114, 0.1925)(115, 0.7573)(116, 0.2648)(117, 0.7667)(118, 0.5831)(119, 0.5704)(120, 0.7662)(121, 0.7692)(122, 0.2828)(123, 0.1932)(124, 0.2063)(125, 0.3655)(126, 0.1652)(127, 0.2968)(128, 0.5082)(129, 0.1716)(130, 0.3830)(131, 0.4959)(132, 0.7863)(133, 0.7300)(134, 0.3829)(135, 0.6468)(136, 0.3492)(137, 0.3626)(138, 0.2775)(139, 0.3002)(140, 0.2077)(141, 0.4131)(142, 0.6363)(143, 0.4396)(144, 0.6318)(145, 0.2324)(146, 0.7563)(147, 0.2290)(148, 0.1504)(149, 0.3584)(150, 0.1609)(151, 0.3699)(152, 0.5178)(153, 0.6771)(154, 0.2289)(155, 0.2018)(156, 0.3225)(157, 0.6473)(158, 0.6055)(159, 0.6419)(160, 0.2973)(161, 0.3919)(162, 0.3621)(163, 0.3150)(164, 0.6574)(165, 0.2154)(166, 0.4097)(167, 0.3063)(168, 0.1838)(169, 0.6983)(170, 0.6567)(171, 0.3202)(172, 0.1726)(173, 0.2921)(174, 0.4148)(175, 0.7709)(176, 0.5587)(177, 0.7852)(178, 0.5934)(179, 0.4150)(180, 0.6208)(181, 0.3503)(182, 0.7435)(183, 0.1819)(184, 0.5067)(185, 0.2989)(186, 0.3150)(187, 0.6031)(188, 0.7680)(189, 0.5881)(190, 0.1881)(191, 0.7187)(192, 0.6749)(193, 0.7241)(194, 0.2593)(195, 0.5255)(196, 0.4107)(197, 0.2339)(198, 0.6664)(199, 0.2106)
+    };
+
+\addplot[color=blue,mark=*]
+    coordinates {
+   (0, 7.2581)(1, 8.5874)(2, 8.8616)(3, 7.0120)(4, 8.1209)(5, 8.8851)(6, 7.2569)(7, 8.4974)(8, 7.8384)(9, 7.3198)(10, 7.6455)(11, 7.1916)(12, 7.7417)(13, 7.6885)(14, 8.9090)(15, 8.4588)(16, 8.9371)(17, 8.4289)(18, 7.0253)(19, 7.8259)(20, 8.7510)(21, 7.0356)(22, 7.7171)(23, 8.6385)(24, 8.8850)(25, 8.3806)(26, 8.4158)(27, 7.0829)(28, 8.6701)(29, 8.8617)(30, 8.9375)(31, 7.7371)(32, 8.0272)(33, 6.9607)(34, 8.5274)(35, 8.3365)(36, 7.2804)(37, 8.7835)(38, 8.2575)(39, 7.7424)(40, 8.2514)(41, 7.9038)(42, 8.5486)(43, 8.0918)(44, 7.8804)(45, 7.5646)(46, 8.0569)(47, 7.3799)(48, 8.1589)(49, 8.5126)(50, 7.7171)(51, 8.1614)(52, 7.1459)(53, 7.6231)(54, 8.9326)(55, 8.1405)(56, 7.0890)(57, 6.9849)(58, 8.0189)(59, 8.1478)(60, 7.0768)(61, 7.8425)(62, 8.9244)(63, 7.4734)(64, 8.1548)(65, 7.4361)(66, 7.9335)(67, 8.7374)(68, 8.8980)(69, 8.7151)(70, 8.0555)(71, 8.5351)(72, 8.3284)(73, 7.6511)(74, 6.9903)(75, 8.8574)(76, 7.3091)(77, 7.1302)(78, 8.6872)(79, 7.0907)(80, 7.8697)(81, 7.3132)(82, 7.0785)(83, 7.3523)(84, 7.7954)(85, 7.2289)(86, 8.6239)(87, 8.9674)(88, 7.5731)(89, 7.8952)(90, 7.1913)(91, 8.3398)(92, 8.6076)(93, 7.9966)(94, 7.1568)(95, 7.7505)(96, 8.4476)(97, 7.1322)(98, 8.0669)(99, 8.1918)(100, 8.3770)(101, 8.7463)(102, 8.2076)(103, 8.6390)(104, 8.4653)(105, 6.9635)(106, 8.4382)(107, 7.5575)(108, 8.9506)(109, 7.4044)(110, 8.7415)(111, 8.0465)(112, 7.7643)(113, 7.5021)(114, 8.3412)(115, 8.6463)(116, 7.8994)(117, 8.1816)(118, 8.2475)(119, 7.6796)(120, 6.9706)(121, 7.6484)(122, 7.4745)(123, 8.1416)(124, 8.3121)(125, 7.4409)(126, 8.0142)(127, 7.9002)(128, 7.3166)(129, 7.2795)(130, 8.7242)(131, 7.3722)(132, 8.1575)(133, 7.3551)(134, 8.1159)(135, 8.0719)(136, 8.0111)(137, 7.0301)(138, 8.6737)(139, 7.9542)(140, 8.6676)(141, 6.9905)(142, 7.0000)(143, 8.3189)(144, 7.8759)(145, 8.4932)(146, 7.7501)(147, 7.3744)(148, 8.2122)(149, 8.2224)(150, 8.0739)(151, 7.1142)(152, 8.5160)(153, 8.2712)(154, 7.0623)(155, 8.0151)(156, 8.1797)(157, 8.6308)(158, 7.0204)(159, 8.6513)(160, 7.6088)(161, 7.5068)(162, 8.2965)(163, 7.0048)(164, 8.1479)(165, 7.9667)(166, 7.4470)(167, 8.7428)(168, 7.8684)(169, 8.1107)(170, 8.2297)(171, 7.6617)(172, 7.1490)(173, 7.1571)(174, 7.4784)(175, 7.3728)(176, 8.4352)(177, 7.8115)(178, 8.4800)(179, 7.8281)(180, 7.2046)(181, 8.7025)(182, 7.3048)(183, 8.3861)(184, 7.3588)(185, 8.8919)(186, 8.5546)(187, 7.3454)(188, 7.6331)(189, 8.3348)(190, 8.5005)(191, 7.5060)(192, 7.5525)(193, 7.4927)(194, 8.3003)(195, 8.4166)(196, 7.8010)(197, 7.8737)(198, 7.5444)(199, 7.9767)
+    };
+
+\legend{Sys Time, User Time}
+
+\end{axis}
+\end{tikzpicture}
+
+\section{Endereços}
+\paragraph{} Ao manipular e rodar o código "praticaDeAlocacaoDeMemoria.cpp" para exibir os endereços utilizados pelo programa, é possível perceber que não muda o endereço, sempre continua o mesmo. Por exemplo, em um caso de teste, com o código alterado para exibir somente os endereços utilizados e nada mais, todos os endereços mostrados no console foram "0x7ffdb4f10690", que será diferente se rodar novamente, mas durante a execução do programa, se manteve a mesma e não se alterou ao longo do tempo.
+
+\section{Considerações Finais}
+\paragraph{} Finalizando, conclui-se que alocação dinâmica de memória em C++ não é difícil, é muito útil, como em casos em que só se sabe a quantidade de memória necessária para rodar o programa durante a execução do programa, mas pode ser extremamente complicada em outros casos. Com isso, é notável que o gráfico da utilização de memória por tempo decorrido não é uma linha reta, mas se parece muito com uma, mostrando que em algumas vezes o programa roda mais rápido e outras um pouco mais devagar.  \par
+Percebe-se também que, no tempo de CPU, o Sys Time é muito menos utilizado que o User Time, devido ao programa necessitar menos de atividade do kernel. Por fim, é importante ressaltar que o programa não mudará o seu endereço de memória, somente quando for rodar novamente, como foi demonstrado na seção 6.
+
+\end{document}

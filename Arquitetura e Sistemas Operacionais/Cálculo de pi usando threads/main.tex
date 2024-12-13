@@ -1,0 +1,159 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage[utf8]{inputenc}
+\lstset{ 
+literate= {á}{{\'a}}1 
+    {é}{{\'e}}1 
+    {í}{{\'i}}1 
+    {ó}{{\'o}}1 
+    {ú}{{\'u}}1
+} 
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+}
+\pgfplotsset{compat=1.18}
+\usepackage[portuguese]{babel}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{Cálculo de $\pi$ usando threads}
+\author{Gabriel Gaspar, Pedro Olivo}
+\date{03 dezembro 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+\paragraph{}Trabalho realizado pelos alunos Gabriel Gaspar e Pedro Olivo, para a matéria de Arquitetura e Sistemas Operacionais, ministrada pelo professor Gabriel Candido. Neste trabalho, foi feito um programa em C\texttt{++}, para calcular os termos de $\pi$, usando threads. Os programas foram compilados usando o seguinte comando, no qual foi solicitado na atividade:
+
+\lstinputlisting[language=bash]{code/compile.sh}
+
+\section{Ambiente de Desenvolvimento}
+\paragraph{} Os programas foram desenvolvidos e testados em um computador \href{https://www.samsung.com/br/computers/samsung-book/galaxy-book4-pro-14-inch-ultra-7-16gb-512gb-np940xgk-kg1br/#specs}{Samsung Galaxy Book 4 Pro}, utilizando o Windows Subsystem for Linux (WSL), na edição Linux 5.15.153.1-microsoft-standard-WSL2, usando como sistema operacional convidado o Ubuntu 22.04.5 LTS, com as seguintes especificações:
+\begin{itemize}
+    \item Sistema Operacional: \href{https://www.microsoft.com/pt-br/windows}{Windows 11} / \href{https://releases.ubuntu.com/jammy/}{Ubuntu 22.04.5 LTS}
+    \item Processador: \href{https://www.intel.com.br/content/www/br/pt/products/sku/236847/intel-core-ultra-7-processor-155h-24m-cache-up-to-4-80-ghz/specifications.html}{ Intel Core Ultra 7 155H}
+    \item Memória: 16GB DDR5 7467MT/s
+    \item Armazenamento: \href{https://www.harddrivebenchmark.net/hdd.php?hdd=SAMSUNG%20MZVL4512HBLU-00B&id=36410}{SAMSUNG MZVL4512HBLU-00B}
+    \item IDE: Visual Studio Code 1.95.3
+\end{itemize}
+
+\section{Série de Leibniz}
+\paragraph{}Ao implementar a série de Leibniz em C\texttt{++}, podemos convertê-la do formato de somatório a seguir:
+
+\[ \sum_{n=0}^{\infty} \frac {(-1)^n}{2n+1} = \frac {\pi}{4} \]
+
+\paragraph{}para código em C\texttt{++}:
+
+\lstinputlisting[language=c++]{code/leibniz.cpp}
+
+\paragraph{}Este código, de acordo com a atividade, calcula um bilhão ($10^{9}$) de termos da série de Leibniz, usando variáveis de precisão dupla e também usando a biblioteca \textbf{cmath}, que é o equivalente ao \textbf{math.h} , do C, para o C\texttt{++}.
+
+\section{Cálculo de $\pi$ usando várias tarefas}
+
+\paragraph{}De acordo com a atividade, o código do capítulo anterior foi alterado para fazer tal cálculo usando tarefas paralelas, usando threads. Para poder separar o código anterior em várias tarefas, foi feita a função \textbf{calcpi}, que separa uniformemente o espaço de cálculo entre a quantidade especificada no início do código de tarefas. Na função \textbf{main}, está a criação de threads, ainda de acordo com a quantidade especificada e a chamada da função. No final, todos os valores achados por cada tarefa são alocados no vetor global para que todos os seus termos sejam somados, assim encontrando a resposta do cálculo de $\pi$, com uma precisão de 10 dígitos decimais. Não queríamos usar o vetor global que foi usado, mas era necessário para não mexer com alocação dinâmica de memória. Com isso, segue o código do programa em C\texttt{++}:
+
+\lstinputlisting[language=c++]{code/calcpi.cpp}
+
+\section{Tempo por quantidade de threads}
+\paragraph{}Foi modificado o código anterior, para poder calcular o tempo, utilizando a biblioteca \textbf{chrono}, além de colocar todo o método main dentro de um laço \textit{for}, para que o código rode 5 vezes automaticamente. No final, foi implementada uma soma para que a média do tempo demorado seja feita também automaticamente, além de ter sido criada uma saída que imprime as coordenadas que são relevantes para a confecção de gráficos, facilitando o desenvolvimento dos mesmos em \LaTeX. O código está abaixo, de modo em que a linha 8 foi alterada conforme a quantidade de threads solicitada pela atividade.
+
+\lstinputlisting[language=c++]{code/calcpiTIME.cpp}
+
+\paragraph{}Abaixo está uma tabela com os tempos de execução obtidos, valores médios e coeficientes de variação, específicos para cada quantidade de thread solicitada. Os valores médios são a média dos tempos de execução e o coeficiente de variação é para garantir que as medições estejam consistentes, usando sua própria fórmula. Todas as medidas de tempo estão em milissegundos (ms), por motivos de padronização e para facilitar os cálculos da média e dos coeficientes de variação.
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+ & Tempo de execução (ms) & Valores médios (ms) & Coeficientes de variação (\%) \\ \hline
+1 thread & 11999; 12304; 12330; 12614; 12672 & 12383 & 1,78\% \\ \hline
+2 threads & 6685; 6318; 6646; 6693; 6555 & 6579 & 2,12\% \\ \hline
+4 threads & 4265; 4329; 4623; 4509; 4314 & 4408 & 3,07\% \\ \hline
+8 threads & 2664; 2822; 2747; 2893; 2948 & 2814 & 3,59\% \\ \hline
+16 threads & 1816; 1826; 1924; 1936; 2065 & 1913 & 4,71\% \\ \hline
+32 threads & 2136; 2218; 2355; 2360; 2211 & 2256 & 3,88\% \\ \hline
+\end{tabular}
+\end{center}
+
+\newpage
+\clearpage
+\section{Gráfico de threads X tempo}
+
+\begin{center}
+\begin{tikzpicture}
+    \begin{axis}[
+        title = {Gráfico da quantidade de threads pelo tempo médio de execução},
+        title style={yshift=10pt},
+        width=14cm, 
+        height=8cm,
+        xlabel={Número de threads},
+        ylabel={Tempo médio de execução (ms)},
+        xmin=0,
+        xmax=34,
+        ymin=0,
+        xtick={1, 2, 4, 8, 16, 32},
+        ytick={0, 2000, 4000, 6000, 8000, 10000, 12000, 14000},
+        grid=both,
+        grid style={dashed, gray!30},
+        major grid style={black!50},
+        minor tick num=1,
+        every axis plot/.append style={thick},
+        enlargelimits=0.1,
+        legend pos = north east
+    ]
+        \addplot[
+            color=blue,
+            mark=*,
+            line width=1pt
+        ] coordinates {
+            (1, 12383)
+            (2, 6579)
+            (4, 4408)
+            (8, 2814)
+            (16, 1913)
+            (32, 2256)
+        };
+
+        \addlegendentry{Tempo médio X Qtde. threads}
+    \end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Conclusão}
+\paragraph{}Com todas as informações supracitadas, é possível notar que quanto mais threads se usam para executar um programa, mais rápido ele vai terminar de executar. Por exemplo, com somente uma thread, o programa demorou, em média, 12 segundos para terminar de rodar, enquanto com 32 threads, o programa demorou aproximadamente 10x menos, com um total de 2 segundos. Resumindo, para operações que demandam muito do sistema, é extremamente conveniente utilizar threads, já que cada thread vai executar uma parte do programa em paralelo e de modo simultâneo, podendo reduzir em grandes quantidades o tempo necessário para que o programa termine de rodar.
+\paragraph{} Por fim, é importante notar também, que ao rodar o programa usando o comando \textbf{time}, do Linux, mostra que o programa com 32 threads demorou 8 segundos para rodar totalmente, mesmo tendo 3 minutos e 5 segundos de tempo de usuário. Isso se dá porque o sistema operacional calcula o tempo que cada thread demorou no modo de usuário/sistema do processador e soma todos os valores no final, para mostrar como tempo real, diferente das medições feitas anteriormente, que usam as funções da biblioteca \textbf{chrono}, do próprio C\texttt{++}, as quais só levam em conta o tempo real.
+
+\end{document}

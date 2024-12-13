@@ -1,0 +1,178 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage[utf8]{inputenc}
+\lstset{ 
+literate= {á}{{\'a}}1 
+    {é}{{\'e}}1 
+    {í}{{\'i}}1 
+    {ó}{{\'o}}1 
+    {ú}{{\'u}}1
+} 
+
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+}
+
+\pgfplotsset{compat=1.17}
+\usepackage[portuguese]{babel}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Recursividade - Estrutura de Dados}
+\author{Gabriel Gaspar}
+\date{17 novembro 2024}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+\paragraph{}Nesse trabalho, foram modificados programas em C++ já prontos, de geração randômica de números, de cálculo do máximo divisor comum de 200 valores, utilizando 3 algoritmos diferentes, com os números vindo do programa de geração randômica e um programa que faz o cálculo para achar valores na sequência de Fibonacci, tanto de maneira recursiva como iterativa.
+
+\section{Ambiente de desenvolvimento}
+\paragraph{} Os programas foram desenvolvidos/modificados e testados em um computador "\href{https://www.samsung.com/br/computers/samsung-book/galaxy-book4-pro-14-inch-ultra-7-16gb-512gb-np940xgk-kg1br/#specs}{Samsung Galaxy Book 4 Pro}", utilizando o Windows Subsystem for Linux (WSL), na edição Linux 5.15.153.1-microsoft-standard-WSL2, usando como sistema operacional convidado o Ubuntu 22.04.5 LTS, com as seguintes especificações:
+\begin{itemize}
+    \item Sistema Operacional: \href{https://www.microsoft.com/pt-br/windows}{Windows 11} / \href{https://releases.ubuntu.com/jammy/}{Ubuntu 22.04.5 LTS}
+    \item Processador: \href{https://www.intel.com.br/content/www/br/pt/products/sku/236847/intel-core-ultra-7-processor-155h-24m-cache-up-to-4-80-ghz/specifications.html}{ Intel Core Ultra 7 155H}
+    \item Memória: 16GB DDR5 7467MT/s
+    \item Armazenamento: \href{https://www.harddrivebenchmark.net/hdd.php?hdd=SAMSUNG%20MZVL4512HBLU-00B&id=36410}{SAMSUNG MZVL4512HBLU-00B}
+    \item IDE: Visual Studio Code 1.95.3
+\end{itemize}
+
+\section{Fibonacci}
+\paragraph{} Para calcular o Fibonacci, foram feitos dois programas, um usando iteratividade e outro usando recursividade, sendo que os dois começam no quinto termo e vão até alcançar o quingentésimo termo, crescendo em uma proporção de 5 em 5 por repetição. É possível notar que, no caso do cálculo dos termos de Fibonacci, o programa iterativo roda muito mais rápido quando comparado ao programa recursivo.
+\paragraph{} No programa iterativo, pode se perceber que a medição usando chrono e a medição usando getrusage tem diferenças. Possivelmente isso acontece porque o getrusage pega o tempo total em que o programa esteve rodando, enquanto o chrono, pega o tempo desde que se iniciou a contagem. Também é possível perceber que o tempo de sistema sempre fica nulo, demonstrando que o sistema só utiliza o modo de usuário para rodar o programa. O gráfico a seguir mostra o termo no qual o programa estava calculando pelo tempo demorado, em nanossegundos, utilizando o relógio de alta resolução. Foi utilizado nanossegundos, e não microssegundos como é pedido no Classroom, devido aos números em microssegundos estarem variando entre 0 e 1. Não coloquei a quantidade de RAM utilizada pelo programa por ela não ter alterações consideráveis. É importante notar que o programa foi manipulado para imprimir as coordenadas necessárias para facilitar a construção do gráfico no \LaTeX.
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Gráfico do termo calculado pelo tempo decorrido (iterativo)},
+    xlabel={Termo calculado (kB)},
+    ylabel={Tempo Decorrido (nanossegundos)},
+    xmin=5, xmax=500,
+    ymin=60, ymax=1000,
+    xtick={100, 200, 300, 400, 500},
+    ytick={100, 200, 300, 400, 500, 600, 700, 800, 900, 1000},
+    xticklabel style={/pgf/number format/fixed},
+    yticklabel style={/pgf/number format/fixed},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+    width=18.5cm,
+    height=10cm
+]
+
+\addplot[color=red, mark=*, line width=1.5pt]
+    coordinates {
+    (5, 90) (10, 77) (15, 77) (20, 70) (25, 63) (30, 82) (35, 100) (40, 132) (45, 86) (50, 93) (55, 122) (60, 111) (65, 116) (70, 124) (75, 132) (80, 161) (85, 147) (90, 156) (95, 183) (100, 170) (105, 178) (110, 186) (115, 196) (120, 202) (125, 212) (130, 220) (135, 225) (140, 233) (145, 240) (150, 250) (155, 258) (160, 265) (165, 338) (170, 278) (175, 286) (180, 296) (185, 302) (190, 312) (195, 318) (200, 325) (205, 334) (210, 426) (215, 353) (220, 359) (225, 366) (230, 376) (235, 474) (240, 387) (245, 493) (250, 404) (255, 410) (260, 418) (265, 425) (270, 434) (275, 442) (280, 451) (285, 458) (290, 465) (295, 472) (300, 479) (305, 485) (310, 496) (315, 504) (320, 509) (325, 648) (330, 524) (335, 533) (340, 541) (345, 549) (350, 555) (355, 562) (360, 569) (365, 728) (370, 586) (375, 597) (380, 604) (385, 767) (390, 776) (395, 626) (400, 635) (405, 641) (410, 650) (415, 827) (420, 826) (425, 672) (430, 682) (435, 688) (440, 699) (445, 886) (450, 711) (455, 719) (460, 742) (465, 737) (470, 744) (475, 749) (480, 757) (485, 929) (490, 971) (495, 824) (500, 787)
+    };
+    \legend{Termo x Tempo}
+    
+\end{axis}
+\end{tikzpicture}
+
+\paragraph{} Abaixo está o código do Fibonacci iterativo:
+\lstinputlisting[language=c++]{code/fib_i.cpp}
+
+\paragraph{} Em relação ao Fibonacci de modo recursivo, é importante notar que o programa não termina de acordo com as instruções passadas na atividade, e o tempo para terminar conforme se avança de termo, é exponencial. O programa simplesmente roda por tempo indeterminado. Não foi feito nenhum gráfico pelo fato do programa nunca terminar e não encontrar do quinquagésimo quinto termo em diante, sendo o último termo encontrado, o quinquagésimo termo. Abaixo está o código do programa utilizado.
+\lstinputlisting[language=c++]{code/fib_r.cpp}
+
+\section{Máximo Divisor Comum}
+\paragraph{} Ao rodar o código do programa gera\textunderscore numeros\textunderscore mdc.cpp, que está no Classroom, com o seguinte parâmetro:
+\lstinputlisting[language=bash]{code/geranumeromdc.sh}
+foi possível passar os números gerados e que foram impressos para um arquivo CSV, prontos para a leitura do programa que faz o cálculo do máximo divisor comum com os 3 algoritmos diferentes, sendo eles iteratividade, recursividade e por fim, sub recursividade. Foi separado cada algoritmo em um programa diferente, para facilitar a montagem dos gráficos em \LaTeX. 
+\paragraph{} No gráfico a seguir, a unidade de tempo utilizada foi o nanossegundo, já que ao usar microssegundos no MDC iterativo os valores ficam muito baixos, então para manter um padrão, todos os programas usam a mesma unidade de tempo. 
+
+\begin{tikzpicture}
+\begin{axis}[
+    title={Gráfico de comparação entre os algoritmos de MDC},
+    xlabel={Quantidade de números calculados},
+    ylabel={Tempo decorrido (em nanossegundos)},
+    xmin=5, xmax=200,
+    ymin=0, ymax=200000,
+    xtick={50, 100, 150, 200},
+    ytick={50000, 100000, 150000, 200000},
+    xticklabel style={/pgf/number format/fixed},
+    yticklabel style={/pgf/number format/fixed},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+    width=18.5cm,
+    height=10cm
+]
+
+% Linha 1
+\addplot[color=red, mark=*, line width=1.5pt]
+    coordinates {
+    (5, 720) (10, 710) (15, 1064) (20, 1166) (25, 1365) (30, 1566) (35, 1710) (40, 2085) (45, 2337) (50, 2669) (55, 2865) (60, 3046) (65, 3468) (70, 3571) (75, 3778) (80, 4139) (85, 4258) (90, 4495) (95, 4746) (100, 4921) (105, 5143) (110, 5201) (115, 5570) (120, 5635) (125, 6105) (130, 6359) (135, 6737) (140, 6953) (145, 7348) (150, 7815) (155, 8046) (160, 8551) (165, 8347) (170, 9635) (175, 9061) (180, 8893) (185, 11177) (190, 8252) (195, 7293) (200, 7741)
+    };
+\addlegendentry{MDC Iterativo}
+
+% Linha 2
+\addplot[color=blue, mark=square*, line width=1.5pt]
+    coordinates {
+    (5, 3419) (10, 4980) (15, 6052) (20, 10265) (25, 11122) (30, 12375) (35, 15336) (40, 16208) (45, 18067) (50, 19247) (55, 22705) (60, 23680) (65, 56552) (70, 26998) (75, 29073) (80, 95489) (85, 69244) (90, 70736) (95, 72528) (100, 74058) (105, 76938) (110, 78094) (115, 79782) (120, 114253) (125, 98565) (130, 92517) (135, 95555) (140, 98272) (145, 91787) (150, 95226) (155, 96543) (160, 104814) (165, 99908) (170, 108189) (175, 106743) (180, 197814) (185, 161875) (190, 114349) (195, 120190) (200, 131158)
+    };
+\addlegendentry{MDC Recursivo}
+
+% Linha 3
+\addplot[color=green, mark=triangle*, line width=1.5pt]
+    coordinates {
+    (5, 4135) (10, 6246) (15, 7452) (20, 10629) (25, 12550) (30, 13999) (35, 17643) (40, 18195) (45, 20063) (50, 21558) (55, 26740) (60, 26563) (65, 28912) (70, 30146) (75, 40390) (80, 123531) (85, 77655) (90, 86267) (95, 81987) (100, 82557) (105, 86119) (110, 95045) (115, 91565) (120, 104371) (125, 106272) (130, 129678) (135, 101809) (140, 101712) (145, 110824) (150, 107160) (155, 119861) (160, 110444) (165, 114053) (170, 140711) (175, 121876) (180, 121475) (185, 123539) (190, 132761) (195, 134680) (200, 130336)
+    };
+\addlegendentry{MDC Sub-Recursivo}
+
+\end{axis}
+\end{tikzpicture}
+
+
+\section{Códigos do Máximo Divisor Comum}
+\paragraph{} O programa a seguir faz os cálculos do Máximo Divisor Comum utilizando os 3 algoritmos. Para fazer o gráfico anterior, o programa foi manipulado para mostrar somente o tempo de cada algoritmo.
+
+\lstinputlisting[language=c++]{code/mdc.cpp}
+
+\section{CMake}
+\paragraph{} A parte do CMake foi um tanto complicada de se entender. No Classroom, está anexado um arquivo "CMake.zip", com os arquivos necessários para o CMake funcionar, como o "CMakeLists.txt" e o "Makefile". Para compilar corretamente os códigos, é necessário entrar na pasta "build" e rodar o seguinte comando, dentro de uma CLI:
+
+\lstinputlisting[language=]{code/cmake.sh}
+
+\section{Conclusão}
+\paragraph{} Finalizando, com esse trabalho foi possível perceber que a recursividade é um artefato muito útil na vida de um programador, deixando o código mais enxuto e mais fácil de se trabalhar com. Mas não é sempre assim, como nota-se no programa que calcula Fibonacci usando recursividade. Neste programa, quando chega no quinquagésimo termo, o programa começa a demorar muito, diferentemente da versão iterativa do mesmo programa, no qual consegue alcançar o quingentésimo termo em tempos menores que 0.0001 segundos. 
+\paragraph{} No programa que calcula o Máximo Divisor Comum acontece a mesma coisa, a versão iterativa do programa performa melhor que as versões com os outros dois algoritmos, sendo que o iterativo consegue alcançar tempos 10 vezes mais rápidos que o recursivo e o sub recursivo. 
+
+\end{document}
