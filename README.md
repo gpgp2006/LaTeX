@@ -10,3 +10,8 @@ Trabalhos feitos usando LaTeX:
 
 ## Arquitetura e Sistemas Operacionais
  - Cálculo de π usando threads
+
+# "Eu tenho medo de dormir com a luz apagada"
+
+### diz Samuel Notícias (FOTO)
+![FOTO](https://i.imgur.com/rM78d1j.jpeg)
