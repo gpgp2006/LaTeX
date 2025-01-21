@@ -16,4 +16,4 @@ Trabalhos feitos usando LaTeX:
 ### diz Samuel Notícias (FOTO)
 ![FOTO](https://preview.redd.it/samuel-not%C3%ADcias-em-4k-v0-ki6r3kg8rpvd1.png?auto=webp&s=7eceb31364569a4dadc6efecc2523708449804b9)
 
-<sup><sub><sub><sub><sub> [*Fonte: Maracanã / C. Caiuá*](https://pt.ra.co/dj/yojironoda) </sub></sub></sub></sub></sup>
+<sup><sub><sub><sub><sub> [*Fonte: Maracanã / C. Caiuá, jogando ectoplasma na sua cara*](https://pt.ra.co/dj/yojironoda) </sub></sub></sub></sub></sup>
