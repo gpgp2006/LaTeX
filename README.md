@@ -14,6 +14,6 @@ Trabalhos feitos usando LaTeX:
 # "Eu tenho medo de dormir com a luz apagada"
 
 ### diz Samuel Notícias (FOTO)
-![FOTO](https://i.imgur.com/rM78d1j.jpeg)
+![FOTO]([https://i.imgur.com/rM78d1j.jpeg](https://preview.redd.it/samuel-not%C3%ADcias-em-4k-v0-ki6r3kg8rpvd1.png?auto=webp&s=7eceb31364569a4dadc6efecc2523708449804b9))
 
 <sup><sub><sub><sub><sub> [*Fonte: Maracanã / C. Caiuá*](https://pt.ra.co/dj/yojironoda) </sub></sub></sub></sub></sup>
