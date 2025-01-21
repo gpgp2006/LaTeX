@@ -7,6 +7,7 @@ Trabalhos feitos usando LaTeX:
 - Gráfico da divisão manual
 - Alocação dinâmica de memória
 - Recursividade
+- Lista de Árvores
 
 ## Arquitetura e Sistemas Operacionais
  - Cálculo de π usando threads
