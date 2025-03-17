@@ -2,8 +2,6 @@
 
 Este repositório contém todos os arquivos LaTeX e PDFs, além dos arquivos do próprio Visual Studio Code, que eu utilizei para fazer relatórios e trabalhos ao longo do curso de Bacharelado de Ciência da Computação, no Instituto Federal do Paraná. A lista dos trabalhos realizados está abaixo.
 
-<br> </br>
-
 # 2° Semestre 
 
 ### Estrutura de Dados
@@ -14,8 +12,6 @@ Este repositório contém todos os arquivos LaTeX e PDFs, além dos arquivos do 
 
 ### Arquitetura e Sistemas Operacionais
 - Cálculo de π usando threads 
-
-<br> </br>
 
 # 3° Semestre
 ### Análise Numérica
