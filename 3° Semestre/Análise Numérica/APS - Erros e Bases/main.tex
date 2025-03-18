@@ -1,0 +1,117 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\lstset{ 
+literate= {á}{{\'a}}1 
+    {é}{{\'e}}1 
+    {í}{{\'i}}1 
+    {ó}{{\'o}}1 
+    {ú}{{\'u}}1
+} 
+
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+}
+
+\pgfplotsset{compat=1.17}
+\usepackage[portuguese]{babel}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{APS - Erros e Bases}
+\author{Gabriel de Paula Gaspar Pinto}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Experimentação com códigos}
+
+\section*{Exercício 1}
+
+\begin{enumerate}[label=(\alph*)]
+    \item O código deve imprimir o valor de 10000 * 0.0001, cuja resposta é 1.
+    \item O código imprime 0.9999999999999062.
+\end{enumerate}
+
+\section*{Exercício 2}
+
+\begin{enumerate}[label=(\alph*)]
+    \item O código deve imprimir o valor de 0.1 * 10, que é igual a 1.
+    \item O código imprime 0.9999999999999999.
+    \item Agora, com os parênteses, o programa imprime 1.0000000000000000.
+\end{enumerate}
+
+\section*{Exercício 3}
+\paragraph{}O problema de pontos flutuantes se dão por causa da maneira em que os números são armazenados em computadores. Como os números são armazenados na base 2, os valores fracionários, são armazenados com potências de 2 negativas (como $2^{-1}$, $2^{-2}$, $2^{-3}$, ..., $2^{-n}$). Com isso, a maneira com que base 2 e base 10 são convertidos entre si, alguns números não conseguem ser representados. Como mostrado em sala, o algoritmo de conversão de base 10 para base 2 apresenta perda de precisão com certos números, como $0.8_{\text{10}}$, que em base 2, é representado como uma espécie de dízima periódica, sendo $0.11001_{\text{2}}$. Esse valor na base 2 é aproximado, sendo necessário mais casas decimais para poder representar o valor completo. A mesma coisa acontece quando se tenta representar o valor de $\frac{1}{3}$ em base 10, sendo 0.3333333333....
+
+\section{Conversão de bases}
+
+\section*{Exercício 1}
+
+\begin{enumerate}[label=(\alph*)]
+    \item 1000 1011, sendo o dígito mais a esquerda, o dígito de sinal.
+    \item 1110.1100, não existe perda de precisão neste caso.
+    \item 1111 1011
+\end{enumerate}
+
+\section*{Exercício 2}
+
+\begin{enumerate}[label=(\alph*)]
+    \item 43
+    \item 148
+\end{enumerate}
+
+\section*{Exercício 3}
+
+\begin{enumerate}[label=(\alph*)]
+    \item 217
+\end{enumerate}
+
+\section{Mais erros}
+\section*{Exercício 1}
+\paragraph{}Os lugares mais comuns de se encontrar erros de ponto flutuante podem ser em sistemas bancários, engenharias, como aeroespacial, química, civil e até mesmo a elétrica. Resumindo, em lugares em que a precisão de números muito pequenos e números fracionários importa, podendo causar inconveniências menores, no caso de sistemas bancários, e até desastres, como no caso da engenharia aeroespacial, na qual um valor errado pode fazer um foguete explodir.
+
+\section{Mais informações}
+\paragraph{}Todos os arquivos usados para fazer esta lista e fazer este PDF, estão disponíveis no meu \href{https://github.com/gpgp2006/LaTeX/}{GitHub}. As conversões foram feitas usando o método de divisão sucessiva e conferidos usando um \href{https://www.rapidtables.com/convert/number/decimal-to-binary.html}{conversor de bases}.
+
+\end{document}
