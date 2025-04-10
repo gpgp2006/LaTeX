@@ -1,0 +1,288 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{enumitem}
+\usepackage{pgfplotstable}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{changepage}
+\usepackage[utf8]{inputenc}
+\lstset{ 
+literate= {á}{{\'a}}1 
+    {é}{{\'e}}1 
+    {í}{{\'i}}1 
+    {ó}{{\'o}}1 
+    {ú}{{\'u}}1
+} 
+
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+}
+
+\pgfplotsset{compat=1.17}
+\usepackage[portuguese]{babel}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Consultas SQL - Aula 04}
+\author{Gabriel de Paula Gaspar Pinto}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Exercício 3}
+
+\begin{enumerate}[label=\alph*.]
+    \item De acordo com o que a Mariana quer, esta query está errada, porque não retorna qual garota vendeu mais biscoitos, mas retorna todas as vendas de cada garota, ordenadas pelo nome alfabeticamente. A query retorna a tabela a seguir:
+    
+    \begin{center}
+    \pgfplotstabletypeset[
+        col sep=comma,
+        string type,
+        columns={nome,valor_venda},
+        columns/nome/.style={column name=Nome},
+        columns/valor_venda/.style={
+            column name=Valor da Venda,
+            column type={r},
+            dec sep align
+        },
+        every head row/.style={before row=\toprule, after row=\midrule},
+        every last row/.style={after row=\bottomrule}
+    ]{data.csv}
+    \end{center}
+
+    \item 
+    \begin{enumerate}[label=\roman*., labelsep=0.5em, leftmargin=*]
+        
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, SUM(valor_venda)
+                FROM garota, vendas_biscoito
+                WHERE garota.id_garota = vendas_biscoito.id_garota
+                GROUP BY garota.id_garota
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, MIN(valor_venda), MAX(valor_venda)
+                FROM garota, vendas_biscoito
+                WHERE garota.id_garota = vendas_biscoito.id_garota
+                GROUP BY garota.id_garota;
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, COUNT(DISTINCT data_venda) AS quantidade_vendas
+                FROM garota, vendas_biscoito
+                WHERE garota.id_garota = vendas_biscoito.id_garota
+                GROUP BY garota.id_garota
+            \end{lstlisting}
+        \end{adjustwidth}
+        
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, SUM(valor_venda) AS total
+                FROM garota, vendas_biscoito
+                WHERE garota.id_garota = vendas_biscoito.id_garota
+                GROUP BY garota.id_garota
+                ORDER BY total DESC
+                LIMIT 2;
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, SUM(valor_venda) AS total
+                FROM garota, vendas_biscoito
+                WHERE garota.id_garota = vendas_biscoito.id_garota
+                GROUP BY garota.id_garota
+                ORDER BY total DESC
+                LIMIT 1 OFFSET 1;
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, email
+                FROM garota
+                WHERE email IS NOT NULL
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, telefone
+                FROM garota
+                WHERE email IS NULL
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, email
+                FROM garota
+                WHERE email LIKE '%gmail.com'
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, telefone
+                FROM garota
+                WHERE telefone LIKE '41%'
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, nascimento
+                FROM garota
+                WHERE nome IN ('Ana','Júlia');
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT id_venda, data_venda
+                FROM vendas_biscoito
+                WHERE data_venda BETWEEN '2024-06-05' AND '2024-06-08'
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome AS Nome, SUBSTRING_INDEX(endereco, ',', 1) AS 'Endereco (Logradouro)', SUBSTRING_INDEX(endereco, ',', -1) AS 'Endereco (Número)'
+                FROM garota                
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT AVG(valor_venda) AS 'Valor médio'
+                FROM vendas_biscoito
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome, AVG(valor_venda) AS 'Valor médio'
+                FROM garota, vendas_biscoito
+                WHERE garota.id_garota = vendas_biscoito.id_garota
+                GROUP BY garota.id_garota
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome as 'Nome', AVG(valor_venda) as 'Valor médio'
+                FROM garota, vendas_biscoito
+                WHERE garota.id_garota = vendas_biscoito.id_garota
+                GROUP BY garota.id_garota
+                HAVING AVG(valor_venda) > 14
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome AS Nome, AVG(valor_venda) AS 'Média individual'
+                FROM garota, vendas_biscoito
+                WHERE garota.id_garota = vendas_biscoito.id_garota
+                GROUP BY garota.id_garota
+                HAVING AVG(valor_venda) > (SELECT AVG(valor_venda) FROM vendas_biscoito)                
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome AS Nome, DATE_FORMAT(nascimento, '%d/%m/%Y') AS 'Data de Nascimento'
+                FROM garota
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome AS Nome, TIMESTAMPDIFF(YEAR, nascimento, CURDATE()) as 'Idade'
+                FROM garota
+            \end{lstlisting}
+        \end{adjustwidth}
+
+        \item 
+        \begin{adjustwidth}{1em}{0pt}
+            \begin{lstlisting}[language=SQL]
+                SELECT nome
+                FROM garota
+                WHERE id_garota NOT IN (SELECT id_garota FROM vendas_biscoito)
+            \end{lstlisting}
+        \end{adjustwidth}
+
+    \end{enumerate}
+
+\end{enumerate}
+
+\section*{Exercício 4}
+
+
+\section*{Considerações Finais}
+\paragraph{} O comando SQL do exercício 12 da questão 3 está sem com a grafia incorreta devido à um problema com o pacote \textit{listings} do \LaTeX{}, no qual não estava compilando quando a palavra "endereço" estava escrita corretamente. Este e outros trabalhos feitos usando \LaTeX{}  estão disponíveis em meu \href{https://github.com/gpgp2006/LaTeX}{GitHub}, junto com os arquivos utilizados.
+
+
+
+\end{document}
