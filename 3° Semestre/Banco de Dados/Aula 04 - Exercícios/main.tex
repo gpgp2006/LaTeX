@@ -71,7 +71,7 @@ urlcolor=blue,
 \section*{Exercício 3}
 
 \begin{enumerate}[label=\alph*.]
-    \item De acordo com o que a Mariana quer, esta query está errada, porque não retorna qual garota vendeu mais biscoitos, mas retorna todas as vendas de cada garota, ordenadas pelo nome alfabeticamente. A query retorna a tabela a seguir:
+    \item De acordo com o que a Mariana quer, esta query está errada, porque não retorna qual garota vendeu mais biscoitos, mas retorna todas as vendas de cada garota, ordenadas pelo nome, alfabeticamente. A query retorna a tabela a seguir:
     
     \begin{center}
     \pgfplotstabletypeset[
@@ -203,7 +203,9 @@ urlcolor=blue,
         \item 
         \begin{adjustwidth}{1em}{0pt}
             \begin{lstlisting}[language=SQL]
-                SELECT nome AS Nome, SUBSTRING_INDEX(endereco, ',', 1) AS 'Endereco (Logradouro)', SUBSTRING_INDEX(endereco, ',', -1) AS 'Endereco (Número)'
+                SELECT nome AS Nome, 
+                SUBSTRING_INDEX(endereco, ',', 1) AS 'Endereco (Logradouro)', 
+                SUBSTRING_INDEX(endereco, ',', -1) AS 'Endereco (Número)'
                 FROM garota                
             \end{lstlisting}
         \end{adjustwidth}
@@ -211,7 +213,7 @@ urlcolor=blue,
         \item 
         \begin{adjustwidth}{1em}{0pt}
             \begin{lstlisting}[language=SQL]
-                SELECT AVG(valor_venda) AS 'Valor médio'
+                SELECT ROUND(AVG(valor_venda), 2) AS 'Valor médio'
                 FROM vendas_biscoito
             \end{lstlisting}
         \end{adjustwidth}
@@ -219,7 +221,7 @@ urlcolor=blue,
         \item 
         \begin{adjustwidth}{1em}{0pt}
             \begin{lstlisting}[language=SQL]
-                SELECT nome, AVG(valor_venda) AS 'Valor médio'
+                SELECT nome, ROUND(AVG(valor_venda), 2) AS 'Valor médio'
                 FROM garota, vendas_biscoito
                 WHERE garota.id_garota = vendas_biscoito.id_garota
                 GROUP BY garota.id_garota
@@ -229,7 +231,7 @@ urlcolor=blue,
         \item 
         \begin{adjustwidth}{1em}{0pt}
             \begin{lstlisting}[language=SQL]
-                SELECT nome as 'Nome', AVG(valor_venda) as 'Valor médio'
+                SELECT nome AS 'Nome', ROUND(AVG(valor_venda), 2) AS 'Valor médio'
                 FROM garota, vendas_biscoito
                 WHERE garota.id_garota = vendas_biscoito.id_garota
                 GROUP BY garota.id_garota
@@ -240,7 +242,7 @@ urlcolor=blue,
         \item 
         \begin{adjustwidth}{1em}{0pt}
             \begin{lstlisting}[language=SQL]
-                SELECT nome AS Nome, AVG(valor_venda) AS 'Média individual'
+                SELECT nome AS Nome, ROUND(AVG(valor_venda), 2) AS 'Média individual'
                 FROM garota, vendas_biscoito
                 WHERE garota.id_garota = vendas_biscoito.id_garota
                 GROUP BY garota.id_garota
@@ -251,7 +253,8 @@ urlcolor=blue,
         \item 
         \begin{adjustwidth}{1em}{0pt}
             \begin{lstlisting}[language=SQL]
-                SELECT nome AS Nome, DATE_FORMAT(nascimento, '%d/%m/%Y') AS 'Data de Nascimento'
+                SELECT nome AS Nome, 
+                DATE_FORMAT(nascimento, '%d/%m/%Y') AS 'Data de Nascimento'
                 FROM garota
             \end{lstlisting}
         \end{adjustwidth}
@@ -279,9 +282,28 @@ urlcolor=blue,
 
 \section*{Exercício 4}
 
+\begin{enumerate}[label=\alph*.]
+
+    \item Para Mariana poder calcular a pontuação, de acordo com a fórmula dada, é necessário usar a seguinte query:
+    
+    \begin{adjustwidth}{1em}{0pt}
+        \begin{lstlisting}[language=SQL]
+            SELECT nome AS Nome, 
+            TIMESTAMPDIFF(YEAR, nascimento, CURDATE()) AS Idade, 
+            ROUND(AVG(valor_venda), 2) AS 'Média de venda', 
+            ROUND(AVG(valor_venda) - (TIMESTAMPDIFF(YEAR, nascimento, CURDATE()) * 0.5), 2) AS 'Pontuacao'
+            FROM garota, vendas_biscoito
+            WHERE garota.id_garota = vendas_biscoito.id_garota
+            GROUP BY garota.id_garota
+            ORDER BY 4 DESC
+        \end{lstlisting}
+    \end{adjustwidth}
+
+\end{enumerate}
+
 
 \section*{Considerações Finais}
-\paragraph{} O comando SQL do exercício 12 da questão 3 está sem com a grafia incorreta devido à um problema com o pacote \textit{listings} do \LaTeX{}, no qual não estava compilando quando a palavra "endereço" estava escrita corretamente. Este e outros trabalhos feitos usando \LaTeX{}  estão disponíveis em meu \href{https://github.com/gpgp2006/LaTeX}{GitHub}, junto com os arquivos utilizados.
+\paragraph{} O comando SQL do exercício 12 da questão 3 está com a grafia incorreta devido à um problema com o pacote \textit{listings} do \LaTeX{}, no qual não estava compilando quando a palavra "endereço" estava grafada corretamente, assim como no exercício 4, no qual não compila se a palavra "pontuação" esteja grafada e acentuada corretamente. Este e outros trabalhos feitos usando \LaTeX{} estão disponíveis em meu \href{https://github.com/gpgp2006/LaTeX}{GitHub}, junto com os arquivos utilizados.
 
 
 
