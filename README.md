@@ -16,3 +16,6 @@ Este repositório contém todos os arquivos LaTeX e PDFs, além dos arquivos do 
 # 3° Semestre
 ### Análise Numérica
 - APS: Erros e Bases 
+
+### Banco de Dados II
+- Aula 04 - Exercícios
