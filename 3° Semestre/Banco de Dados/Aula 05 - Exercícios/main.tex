@@ -1,0 +1,314 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{enumitem}
+\usepackage{pgfplotstable}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{changepage}
+\usepackage[utf8]{inputenc}
+\lstset{ 
+literate= {á}{{\'a}}1 
+    {é}{{\'e}}1 
+    {í}{{\'i}}1 
+    {ó}{{\'o}}1 
+    {ú}{{\'u}}1
+} 
+
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+}
+
+\pgfplotsset{compat=1.17}
+\usepackage[portuguese]{babel}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{SQL Joins - Aula 06}
+\author{Gabriel de Paula Gaspar Pinto}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Exercício 3}
+
+\begin{enumerate}[label=\alph*)]
+
+    \item A query não é satisfatória, já que não mostra os alunos e as matérias em que foram matriculados, mas sim a combinação de todas as linhas, múltiplas vezes. A query corrigida, fica:
+
+    % A)
+    \begin{lstlisting}[language=SQL]
+        SELECT
+        a.nome, c.codigo_disciplina
+        FROM
+        aluno AS a
+        INNER JOIN
+        aluno_cursa_disciplina AS c
+        ON a.matricula_aluno = c.matricula_aluno
+    \end{lstlisting}
+
+    É possível omitir a linha 7 e trocar de "INNER JOIN" para "NATURAL JOIN", usando o MySQL, que o resultado será o mesmo.
+
+    % B)
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SELECT
+        a.nome, c.codigo_disciplina
+        FROM
+        aluno AS a
+        LEFT JOIN
+        aluno_cursa_disciplina AS c
+        ON a.matricula_aluno = c.matricula_aluno
+        UNION
+        SELECT
+        a.nome, c.codigo_disciplina
+        FROM
+        aluno AS a
+        RIGHT JOIN
+        aluno_cursa_disciplina AS c
+        ON a.matricula_aluno = c.matricula_aluno
+    \end{lstlisting}
+
+    % C)
+    \item
+    \begin{lstlisting}[language=SQL]
+        SELECT
+        a.nome, c.codigo_disciplina
+        FROM
+        aluno AS a
+        LEFT JOIN
+        aluno_cursa_disciplina AS c
+        ON a.matricula_aluno = c.matricula_aluno
+        WHERE c.codigo_disciplina IS NULL
+    \end{lstlisting}
+
+    % D)
+    \item Como as tabelas de alunos e de disciplinas não são conectadas diretamente, é necessário usar dois LEFT JOINS para mesclar as informações das duas tabelas, através da tabela de aluno\_cursa\_disciplina.
+    \begin{lstlisting}[language=SQL]
+        SELECT
+        d.nome, a.nome
+        FROM
+        disciplina AS d
+        LEFT JOIN
+        aluno_cursa_disciplina AS c
+        ON d.codigo_disciplina = c.codigo_disciplina
+        LEFT JOIN
+        aluno AS a
+        ON c.matricula_aluno = a.matricula_aluno
+    \end{lstlisting}
+
+    % E)
+    \item Mostra o nome da disciplina quando nenhum aluno está matriculado. Se um aluno está matriculado, a disciplina está presente em C, caso contrário, a disciplina não está presente em C. Com isso, mostra todas as disciplinas presentes em D (tabela com TODAS as disciplinas) que não tenham seus correspondentes em C (tabela com alunos e disciplinas).
+    \begin{lstlisting}[language=SQL]
+        SELECT
+        d.nome
+        FROM
+        disciplina AS d
+        LEFT JOIN
+        aluno_cursa_disciplina AS c
+        ON c.codigo_disciplina = d.codigo_disciplina
+        WHERE c.codigo_disciplina IS NULL
+    \end{lstlisting}
+
+    % F)
+    \item Para mostrar todas os alunos e suas respectivas disciplinas, é necessário usar o LEFT JOIN, da tabela de alunos para aluno\_cursa\_disciplina, que conterá todos os alunos, mesmo que não tenha nenhuma disciplina atrelado ao mesmo. Com o USING, a coluna de matricula\_aluno é usada para unir as tabelas, já que esta coluna está presente nas duas tabelas.
+    \begin{lstlisting}[language=SQL]
+        SELECT a.nome, a.matricula_aluno, c.codigo_disciplina
+        FROM
+        aluno AS a
+        LEFT JOIN
+        aluno_cursa_disciplina AS c
+        USING (matricula_aluno)        
+    \end{lstlisting}
+
+    % G)
+    \item Para mostrar o nome de todas as disciplinas e o nome de seus respectivos alunos, usa-se o LEFT JOIN da tabela de disciplinas para aluno\_cursa\_disciplina, com o USING (codigo\_disciplina), mostrando todas as disciplinas, sem exceção. Com o segundo LEFT JOIN, junta-se a tabela aluno\_cursa\_disciplina com a de alunos. Por fim, com o último USING, somente os alunos que estão matriculados serão mostrados, junto com todas as disciplinas. 
+    \begin{lstlisting}[language=SQL]
+        SELECT d.nome, a.nome
+        FROM
+        disciplina AS d
+        LEFT JOIN
+        aluno_cursa_disciplina AS c
+        USING (codigo_disciplina)
+        LEFT JOIN
+        aluno AS a
+        USING (matricula_aluno)
+    \end{lstlisting}
+
+    % H)
+    \item Fazendo um FULL JOIN, acontece a mesma coisa que aconteceu na questão anterior, com a exceção que todas as disciplinas (com alunos ou sem) e todos os alunos (com disciplinas ou não) são mostrados.
+    \begin{lstlisting}[language=SQL]
+        SELECT d.nome, a.nome
+        FROM
+        disciplina AS d
+        LEFT JOIN
+        aluno_cursa_disciplina AS c
+        USING (codigo_disciplina)
+        LEFT JOIN
+        aluno AS a
+        USING (matricula_aluno)
+        
+        UNION
+        
+        SELECT d.nome, a.nome
+        FROM
+        disciplina AS d
+        RIGHT JOIN
+        aluno_cursa_disciplina AS c
+        USING (codigo_disciplina)
+        RIGHT JOIN
+        aluno AS a
+        USING (matricula_aluno)
+    \end{lstlisting}
+
+
+\end{enumerate}
+
+\section*{Exercício 4}
+
+\begin{enumerate}[label=\alph*)]
+
+    % A)
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SELECT *
+        FROM 
+        a
+        INNER JOIN
+        b
+        ON a.pk = b.pk       
+    \end{lstlisting}
+
+    % B)
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SELECT *
+        FROM
+        a
+        LEFT JOIN
+        b
+        ON a.pk = b.pk
+    \end{lstlisting}
+
+    % C)
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SELECT *
+        FROM
+        a
+        RIGHT JOIN
+        b
+        ON a.pk = b.pk
+    \end{lstlisting}
+
+    % D)
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SELECT *
+        FROM
+        a
+        LEFT JOIN
+        b
+        ON a.pk = b.pk
+        WHERE b.pk IS NULL
+    \end{lstlisting}
+
+    % E)
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SELECT *
+        FROM
+        a
+        RIGHT JOIN
+        b
+        ON b.pk = a.pk
+        WHERE a.pk IS NULL
+    \end{lstlisting}
+
+    % F)
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SELECT *
+        FROM
+        a
+        LEFT JOIN
+        b
+        ON a.pk = b.pk
+        
+        UNION
+
+        SELECT *
+        FROM
+        a
+        RIGHT JOIN
+        b
+        ON a.pk = b.pk
+    \end{lstlisting}
+
+    % G)
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SELECT *
+        FROM
+        a
+        LEFT JOIN
+        b
+        ON a.pk = b.pk
+        WHERE b.pk IS NULL
+
+        UNION
+
+        SELECT *
+        FROM
+        a
+        RIGHT JOIN
+        b
+        ON b.pk = a.pk
+        WHERE a.pk IS NULL
+    \end{lstlisting}
+
+\end{enumerate}
+
+\section*{Considerações finais}
+\paragraph{}A partir da questão D), eu coloquei explicações de como cada query funciona porque eu estava tendo dificuldades. Explicar como elas funcionam me ajudou a entender e a fixar o conteúdo. Este e outros trabalhos feitos usando \LaTeX{} estão disponíveis em meu \href{https://github.com/gpgp2006/LaTeX}{GitHub}, com seus códigos-fonte. 
+
+
+\end{document}
