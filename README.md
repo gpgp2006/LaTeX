@@ -18,4 +18,5 @@ Este repositório contém todos os arquivos LaTeX e PDFs, além dos arquivos do 
 - APS: Erros e Bases 
 
 ### Banco de Dados II
-- Aula 04 - Exercícios
+- Aula 04 - Exercícios (Consultas SQL)
+- Aula 06 - Exercícios (Joins SQL)
