@@ -1,0 +1,241 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{enumitem}
+\usepackage{pgfplotstable}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{changepage}
+\usepackage[utf8]{inputenc}
+\lstset{ 
+literate= {á}{{\'a}}1 
+    {é}{{\'e}}1 
+    {í}{{\'i}}1 
+    {ó}{{\'o}}1 
+    {ú}{{\'u}}1
+} 
+
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+}
+
+\pgfplotsset{compat=1.17}
+\usepackage[portuguese]{babel}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{SQL Transactions - Aula 08}
+\author{Gabriel de Paula Gaspar Pinto}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Exercício 1}
+
+    \paragraph{} Transação, em um contexto de banco de dados, é um conjunto de comandos SQL individuais que são agrupados e executados juntos de maneira sequencial. Logo, ou tudo acontece ou nada acontece. Por exemplo, caso haja um erro no banco de dados, a luz caia ou tenha um problema deste tipo, no meio de uma transação, nenhum comando será guardado e o banco voltará estar do jeito que estava antes desta transação. Mas, caso não aconteça nenhum problema durante a transação, ela é concluída e suas alterações são efetivadas no banco.
+    \paragraph{} Um exemplo de transações da vida real, é um banco (do setor financeiro). Quando se vai sacar dinheiro, a parte do banco de dados faz um SELECT para mostrar a quantidade de dinheiro na conta e um UPDATE para subtrair o valor sacado e logo após o dinheiro sai do caixa eletrônico. Caso haja um problema entre o processo de atualizar o valor da conta e o saque do dinheiro, se não fosse usado transações, o cliente simplesmente perderia o dinheiro, mas como as transações são usadas, o UPDATE é revertido para o valor anterior, como se nada tivesse acontecido.
+    
+\section*{Exercício 2}
+
+\begin{enumerate}[label=\alph*)]
+
+    %atomicidade
+    \item Em um sistema bancário, ao tentar transferir R\$100,00 de uma conta A para B. O dinheiro pode ser removido da conta A mas não ser creditado na conta B, resultando no dinheiro sumindo.
+
+    %consistência
+    \item Em uma conta poupança, o saldo nunca pode ser negativo, mas sem consistência, é possível que o saldo seja atualizado para um número negativo, resultando em problemas.
+
+    %isolamento
+    \item Em um sistema sem isolamento, de um show, por exemplo, quando restar somente 1 ingresso, duas pessoas, simultaneamente, podem ver que há somente 1 ingresso restante. As duas conseguem comprar, resultando em um estoque negativo.
+
+    %durabilidade
+    \item Um pedido pode ser finalizado e confirmado ao cliente, mas antes das mudanças serem gravadas, ocorre uma queda de energia, resultando em um pedido perdido, mesmo após a confirmação.
+
+\end{enumerate}
+
+\section*{Exercício 3}
+
+\begin{enumerate}[label=\alph*)]
+
+    %a
+    \item Para inserir o usuário, um simples INSERT INTO foi suficiente, mas para inserir os conteúdos da conta corrente e da conta poupança, foi necessário usar LAST\_INSERT\_ID(), que retorna a última chave primária inserida, já que a chave primária do usuário é auto incremental, o que torna a chave primária desconhecida, já que não é algo imutável, como o CPF de uma pessoa. Em relação à transações, tudo ocorreu de acordo com o esperado, sem nenhum erro.
+    
+    %b
+    \item Como esperado, o rollback fez com que o banco de dados retornasse ao estado anterior ao início da transação.
+    \newline
+    \newline
+    Isso também aconteceria em situações como ao inserir dados em várias tabelas e um dos inserts falhar, quando uma condição de integridade for violada durante uma atualização em lote ou quando há bloqueios ou deadlocks durante a transação são exemplos que podem ser dados. 
+    \newline
+    \newline
+    O rollback é útil para proteger o banco de dados em caso de falha humana. Por exemplo, se alguma pessoa remover dados sensíveis, sem querer, ainda é possível de usar o rollback para que o sistema consiga recuperar os dados apagados por erro. Outro caso em que o rollback é útil, é em falhas não humanas, como por exemplo, quedas de energia. Se o banco de dados ficar sem energia no meio de uma transação, a transação não é concluída e o banco retorna ao estado anterior ao início da transação.
+    
+    %c
+    \item Após iniciar a transação na primeira conexão e subtrair R\$500,00 da conta poupança, mas sem rodar o commit, a segunda conexão só conseguia rodar selects na tabela, se rodasse um update, a segunda aba perdia conexão com o banco de dados. Mas, após dar o commit na primeira transação, foi possível remover mais R\$400,00 da conta, mesmo que ela só tenha R\$300,00, restando em um saldo de R\$100,00 negativos em uma conta poupança. Rodando o update da segunda conexão e, antes de 30 segundos dar commit na primeira transação, o erro de desconexão é não acontece. Isso acontece porque o padrão de nível de isolamento do MySQL é "repeatable read". Para previnir o erro de ter uma conta poupança negativa, é possível atualizar a query de update, para algo como mostrado abaixo ou simplesmente mudar o nível de isolamento do banco para "serializable", que não permite conexões concorrentes.
+    
+    \begin{lstlisting}[language=SQL]
+        UPDATE conta_poupanca SET saldo = saldo - 400 WHERE id_conta = 1 AND saldo >= 400;
+    \end{lstlisting}
+
+    %d
+    \item Após iniciar a transação na primeira conexão, não é possível atualizar nenhum dado na segunda conexão até a transação da primeira conexão ser finalizada. Após 30 segundos, caso a transação da primeira conexão não tenha sido finalizada, a segunda conexão perde a conexão com o banco de dados.
+    
+\end{enumerate}
+
+\section*{Exercício 4}
+
+\begin{enumerate}[label=\alph*)]
+
+    %a
+    \item
+    \begin{lstlisting}[language=SQL]
+        SET @num1 = 20;
+        SET @num2 = 30;
+        SET @num3 = @num1 + @num2;
+        SELECT @num3;
+    \end{lstlisting}
+
+    %b
+    \item Com a seguinte query, é possível fazer o pedido:
+    \begin{lstlisting}[language=SQL]
+        SET @a = 5;
+        SET @b = 2;
+        SET @aux = 0;
+
+        SET @aux = @a;
+        SET @a = @b;
+        SET @b = @aux;
+
+        SELECT @a AS a, @b AS b;
+    \end{lstlisting}
+
+\end{enumerate}
+
+\section*{Exercício 5}
+
+\begin{enumerate}[label=\alph*)]
+
+    %a
+    \item 
+    \begin{lstlisting}[language=SQL]
+        UPDATE conta_corrente SET saldo = 400 WHERE id_conta = 1;
+        UPDATE conta_poupanca SET saldo = 300 WHERE id_conta = 1;
+    \end{lstlisting}
+
+    %b
+    \item 
+    \begin{lstlisting}[language=SQL]
+        SET @transferencia = 300;
+    \end{lstlisting}
+
+    %c
+    \item 
+    \begin{lstlisting}[language=SQL]
+        UPDATE conta_corrente SET saldo = saldo - @transferencia WHERE id_conta = 1;
+        UPDATE conta_poupanca SET saldo = saldo + @transferencia WHERE id_conta = 1;
+    \end{lstlisting}
+
+    %d
+    \item As contas estavam com os valores exatos.
+\end{enumerate}
+
+\section*{Questões de concurso}
+
+\begin{enumerate}
+    %1
+    \item a) Certo
+    
+    %2
+    \item a) As transações controlam melhor apenas a concorrência.
+    
+    %3
+    \item a) Certo
+    
+    %4
+    \item A questão não possui enunciado completo, mas considerando o que foi dado, está incorreto.
+    
+    %5
+    \item c) uma transação lê dados gravados por outra transação que ainda não foi confirmada (committed).
+    
+    %6
+    \item c) A atomicidade é a propriedade que assegura que as atualizações relacionadas e dependentes ocorram dentro dos limites da transação ou nenhuma atualização será efetivada no banco de dados.
+    
+    %7
+    \item b) Errado
+    
+    %8
+    \item d) II e III.
+    
+    %9
+    \item c) Propriedade de durabilidade, que garante que, após uma transação ser concluída com êxito, as alterações feitas no banco de dados persistem, mesmo se houver falhas do sistema.
+    
+    %10
+    \item c) Isolação e Atomicidade.
+    
+    %11
+    \item e) Isolamento
+    
+    %12
+    \item b) mesmo na ocorrência de falhas no sistema de banco de dados, após o término da transação.
+    
+    %13
+    \item d) Atomicidade, Consistência, Durabilidade e Isolamento.
+    
+    %14
+    \item c) durabilidade.
+    
+    %15
+    \item d) O isolamento resolve os efeitos decorrentes da execução de transações concorrentes, em que cada transação é executada de forma que as operações parciais das demais transações não afetem a transação atual.
+    
+    %16
+    \item e) transações.
+    
+    %17
+    \item a) Certo
+    
+    %18
+    \item b) Errado
+    
+    %19
+    \item b) Errado
+
+\end{enumerate}
+
+\end{document}
