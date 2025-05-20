@@ -21,3 +21,4 @@ Este repositório contém todos os arquivos LaTeX e PDFs, além dos arquivos do 
 - Aula 04 - Exercícios (Consultas SQL)
 - Aula 06 - Exercícios (Joins SQL)
 - Aula 07 - Exercícios (Views SQL)
+- Aula 08 - Exercícios (Transações SQL)
