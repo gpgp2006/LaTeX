@@ -1,0 +1,12 @@
+# pasta do vscode
+**/.vscode/
+
+#arquivos com extensões específicas
+*.log
+*.tmp
+*.bak
+*.out
+*.fls
+*.fdb_latexmk
+*.aux
+*.synctex.gz
