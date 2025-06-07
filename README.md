@@ -22,3 +22,6 @@ Este repositório contém todos os arquivos LaTeX e PDFs, além dos arquivos do 
 - Aula 06 - Exercícios (Joins SQL)
 - Aula 07 - Exercícios (Views SQL)
 - Aula 08 - Exercícios (Transações SQL)
+
+### Eng. de Software II
+- APS 02 - Estudo de Caso: Indústria 4.0
