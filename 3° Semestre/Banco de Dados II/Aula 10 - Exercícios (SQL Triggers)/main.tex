@@ -1,0 +1,306 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{array}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{enumitem}
+\usepackage{pgfplotstable}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{changepage}
+\usepackage[utf8]{inputenc}
+\lstset{ 
+literate= {á}{{\'a}}1 
+    {é}{{\'e}}1 
+    {í}{{\'i}}1 
+    {ó}{{\'o}}1 
+    {ú}{{\'u}}1
+} 
+
+\hypersetup{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+}
+
+\pgfplotsset{compat=1.17}
+\usepackage[portuguese]{babel}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{SQL Triggers - Aula 10}
+\author{Gabriel de Paula Gaspar Pinto}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Exercício 1}
+
+\begin{enumerate}[label=\alph*)]
+
+    %letra A
+    \item Gatilhos (triggers) são um mecanismo que permite executar automaticamente um bloco de comandos SQL quando uma determinada ação ocorre sobre uma tabela, como a inserção, atualização ou exclusão de dados.
+    
+    \item As instruções que podem disparar um gatilho são o INSERT, UPDATE e DELETE. Essas ações podem ser associadas a um gatilho configurado para ser executado antes (BEFORE) ou depois (AFTER) da operação ser realizada.
+    
+    \item Durante a execução de um gatilho, o SGDB disponibiliza duas tabelas temporárias, o OLD e o NEW. As duas armazenam os valores das linhas afetadas. A tabela OLD representa os dados antes da modificação, enquanto a tabela NEW representa os dados após a modificação.
+    \par No caso do INSERT, apenas a tabela NEW é disponibilizada, já que a linha inserida não existia antes. Em um DELETE, somente a tabela OLD estará disponível, já que a linha será removida e não haverá novos dados. Por fim, em um UPDATE, tanto quando a tabela NEW e a tabela OLD estão disponíveis, já que uma linha não será removida ou inserida, mas somente editada, permitindo que os valores anteriores e os novos sejam comparados.
+
+\end{enumerate}
+
+\section*{Exercício 2}
+
+\noindent
+\begin{minipage}[t]{0.23\textwidth}
+\centering
+\textbf{tabela1} \\
+\begin{tabular}{|c|}
+\hline
+a1 \\
+\hline
+1 \\
+3 \\
+1 \\
+7 \\
+1 \\
+8 \\
+4 \\
+4 \\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.23\textwidth}
+\centering
+\textbf{tabela2} \\
+\begin{tabular}{|c|}
+\hline
+a2 \\
+\hline
+1 \\
+3 \\
+1 \\
+7 \\
+1 \\
+8 \\
+4 \\
+4 \\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.23\textwidth}
+\centering
+\textbf{tabela3} \\
+\begin{tabular}{|c|}
+\hline
+a3 \\
+\hline
+2 \\
+5 \\
+6 \\
+9 \\
+10 \\
+\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.23\textwidth}
+\centering
+\textbf{tabela4} \\
+\begin{tabular}{|c|c|}
+\hline
+a4 & b4 \\
+\hline
+1 & 3 \\
+2 & 0 \\
+3 & 1 \\
+4 & 2 \\
+5 & 0 \\
+6 & 0 \\
+7 & 1 \\
+8 & 1 \\
+9 & 0 \\
+10 & 0 \\
+\hline
+\end{tabular}
+\end{minipage}
+
+\section*{Exercício 3}
+
+\begin{lstlisting}[language=SQL]
+    DELIMITER $$
+
+    CREATE TRIGGER atualizar_categoria
+    BEFORE UPDATE ON cliente
+    FOR EACH ROW
+    BEGIN
+    IF NEW.total_gasto < 1000 THEN
+        SET NEW.categoria = 'bronze';
+    ELSEIF NEW.total_gasto < 5000 THEN
+        SET NEW.categoria = 'prata';
+    ELSE
+        SET NEW.categoria = 'ouro';
+    END IF;
+    END $$
+
+    DELIMITER ;
+\end{lstlisting}
+
+\section*{Exercício 4}
+
+\begin{enumerate}[label=\alph*)]
+    
+    %letra A
+    \item  
+    \begin{lstlisting}[language=SQL]
+        DELIMITER $$
+
+        CREATE TRIGGER reduzir_quantidade_disponivel
+        AFTER INSERT ON emprestimo
+        FOR EACH ROW
+        BEGIN
+        UPDATE livro SET quantidade_disponivel = quantidade_disponivel - 1 
+        WHERE isbn = NEW.livro_isbn;
+        END $$
+
+        DELIMITER ;
+    \end{lstlisting}
+
+    %letra B
+    \item 
+    \begin{lstlisting}[language=SQL]
+        DELIMITER $$
+
+        CREATE TRIGGER aumentar_quantidade_disponivel
+        AFTER UPDATE ON emprestimo
+        FOR EACH ROW
+        BEGIN
+        IF OLD.ativo = '1' AND NEW.ativo = '0' THEN
+            UPDATE livro SET quantidade_disponivel = quantidade_disponivel + 1 
+            WHERE isbn = NEW.livro_isbn;
+        END IF;
+        END $$
+
+        DELIMITER ;
+    \end{lstlisting}
+
+    %letra C
+    \item 
+    \begin{lstlisting}[language=SQL]
+        CREATE VIEW notificacoes_disponiveis AS
+        SELECT 
+        s.nome AS nome_socio,
+        st.numero AS telefone,
+        l.titulo AS livro
+        FROM notificacao n
+        JOIN socio s ON s.cpf = n.socio_cpf
+        JOIN socio_telefone st ON st.socio_cpf = s.cpf
+        JOIN livro l ON l.isbn = n.livro_isbn
+        WHERE l.quantidade_disponivel > 0;
+    \end{lstlisting}
+
+    %letra D
+    \item 
+    \begin{lstlisting}[language=SQL]
+        CREATE VIEW emprestimos_atrasados AS
+        SELECT s.nome AS nome_socio, l.titulo AS nome_livro, e.retirada, e.devolucao
+        FROM emprestimo e
+        JOIN socio s ON s.cpf = e.socio_cpf
+        JOIN livro l ON l.isbn = e.livro_isbn
+        WHERE e.ativo = '1' AND e.devolucao < CURDATE();
+    \end{lstlisting}
+
+\end{enumerate}
+
+\section*{Exercício 5}
+
+\begin{itemize}
+
+    % insert
+    \item INSERT
+    \begin{lstlisting}[language=SQL]
+        DELIMITER $$
+
+        CREATE TRIGGER log_leilao_insert
+        AFTER INSERT ON leilao
+        FOR EACH ROW
+        BEGIN
+        INSERT INTO leilao_log (id_leilao, id_usuario, id_item, acao, hora, lance, usuario_bd) 
+        VALUES (NEW.id_leilao, NEW.id_usuario, NEW.id_item, 'INSERT', NOW(), NEW.lance, CURRENT_USER());
+        END$$
+
+        DELIMITER ;
+
+    \end{lstlisting}
+
+    % update
+    \item UPDATE
+    \begin{lstlisting}[language=SQL]
+        DELIMITER $$
+
+        CREATE TRIGGER log_leilao_update
+        AFTER UPDATE ON leilao
+        FOR EACH ROW
+        BEGIN
+        INSERT INTO leilao_log (id_leilao, id_usuario, id_item, acao, hora, lance, usuario_bd) 
+        VALUES (NEW.id_leilao, NEW.id_usuario, NEW.id_item, 'UPDATE', NOW(), NEW.lance, CURRENT_USER());
+        END$$
+
+        DELIMITER ;
+    \end{lstlisting}
+
+    % delete
+    \item DELETE
+    \begin{lstlisting}[language=SQL]
+        DELIMITER $$
+
+        CREATE TRIGGER log_leilao_delete
+        AFTER DELETE ON leilao
+        FOR EACH ROW
+        BEGIN
+        INSERT INTO leilao_log (id_leilao, id_usuario, id_item, acao, hora, lance, usuario_bd) 
+        VALUES (OLD.id_leilao, OLD.id_usuario, OLD.id_item, 'DELETE', NOW(), OLD.lance, CURRENT_USER());
+        END$$
+
+        DELIMITER ;
+    \end{lstlisting}
+
+\end{itemize}
+
+\end{document}
