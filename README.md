@@ -1,6 +1,6 @@
 # Trabalhos feitos em LaTeX
 
-Este repositório contém todos os arquivos LaTeX e PDFs, além dos arquivos do próprio Visual Studio Code, que eu utilizei para fazer relatórios e trabalhos ao longo do curso de Bacharelado de Ciência da Computação, no Instituto Federal do Paraná. A lista dos trabalhos realizados está abaixo.
+Este repositório contém todos os arquivos LaTeX e PDFs que eu criei, para relatórios e trabalhos ao longo do curso de Bacharelado de Ciência da Computação, no Instituto Federal do Paraná. A lista dos trabalhos realizados está abaixo.
 
 # 2° Semestre 
 
