@@ -10,3 +10,6 @@
 *.fdb_latexmk
 *.aux
 *.synctex.gz
+
+# ignorar a pasta APS
+3° Semestre/Redes/APS/
