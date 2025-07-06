@@ -241,6 +241,106 @@ A figura abaixo mostra o gráfico da função interpoladora, com os cinco pontos
                     \end{figure}
 
 \newpage
+
+\section{Comparação entre as funções dadas e as funções encontradas}
+
+    \subsection{Função do 6.1}
+        \begin{tikzpicture}
+        \begin{axis}[
+            title={Comparação entre as Funções Polinomiais},
+            xlabel={$x$},
+            ylabel={$f(x)$},
+            xmin=0, xmax=3,
+            ymin=-5, ymax=10,
+            xtick={0, 0.5, 1, 1.5, 2, 2.5, 3},
+            ytick={-5, -2.5, 0, 2.5, 5, 7.5, 10},
+            legend style={at={(0.02,0.98)}, anchor=north west},
+            ymajorgrids=true,
+            grid style=dashed,
+            width=16cm,
+            height=10cm,
+            samples=200,
+            domain=0:3,
+            scaled ticks=false
+        ]
+
+        % Primeira função (com coeficientes exatos)
+        \addplot[
+            color=red,
+            thick
+        ]
+        {
+            0.6999999999999992*x^5
+            - 1.7099999999999984*x^4
+            + 0.4370000000000012*x^3
+            + 1.6460000000000008*x^2
+            - 1.4610000000000005*x
+            + 0.7399999999999977
+        };
+
+        % Segunda função (inteiros)
+        \addplot[
+            color=blue,
+            thick
+        ]
+        {
+            x^6 - 2*x^5 - 3*x^4 + 5*x^3 + 2*x^2 - 3*x + 1
+        };
+
+        \legend{Interpolação Polinomial, Função Original}
+
+        \end{axis}
+        \end{tikzpicture}
+
+
+    \subsection{Função do 6.2}
+        \begin{tikzpicture}
+        \begin{axis}[
+            title={Comparação entre as Funções Polinomiais},
+            xlabel={$x$},
+            ylabel={$f(x)$},
+            xmin=0, xmax=3,
+            ymin=-5, ymax=10,
+            xtick={0, 0.5, 1, 1.5, 2, 2.5, 3},
+            ytick={-5, -2.5, 0, 2.5, 5, 7.5, 10},
+            legend style={at={(0.02,0.98)}, anchor=north west},
+            ymajorgrids=true,
+            grid style=dashed,
+            width=16cm,
+            height=10cm,
+            samples=200,
+            domain=0:3,
+            scaled ticks=false
+        ]
+
+        % Interpolação polinomial (grau 3)
+        \addplot[
+            color=red,
+            thick
+        ]
+        {
+            -0.2299999999999993*x^3
+            - 0.9359999999999992*x^2
+            - 2.3580000000000001*x
+            + 1.8479999999999996
+        };
+
+        % Função original (grau 5)
+        \addplot[
+            color=blue,
+            thick
+        ]
+        {
+            x^5 + 3*x^4 + 1.5*x^3 - 2*x^2 - 3*x + 2
+        };
+
+        \legend{Interpolação Polinomial, Função Original}
+
+        \end{axis}
+        \end{tikzpicture}
+
+
+
 \section{Código-fonte do gerador de gráficos}
 \paragraph{} Abaixo está o código-fonte do programa usado para gerar os gráficos. Basicamente, ajustamos o \hyperref[sec:codigofonte1]{programa original} para automaticamente exportar um gráfico com os pontos de entrada e o gráfico da função interpoladora encontrada.
 
