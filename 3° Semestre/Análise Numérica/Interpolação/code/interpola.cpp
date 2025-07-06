@@ -56,7 +56,7 @@ int main() {
     }
 
     for (int i = 0; i < n; ++i) {
-        cout << resultado[i] << endl;
+        cout<< fixed <<setprecision(16)<< resultado[i] << endl;
     }
 
     for (int i = 0; i < n; ++i)
